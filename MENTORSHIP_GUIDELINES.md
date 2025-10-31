@@ -21,7 +21,8 @@
 - Reflect on trade-offs before making decisions
 
 ## Current Phase
-[Update as you progress]
+Week 1: Foundation & Code Quality
 
 ## Current Questions/Blockers
-[Keep this updated]
+- How do I know if my code is "good enough" before moving to frameworks?
+- What's the best order to learn: testing → Spring Boot → database, or different?
