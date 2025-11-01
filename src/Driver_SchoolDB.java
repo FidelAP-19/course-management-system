@@ -15,6 +15,8 @@ public class Driver_SchoolDB {
         ArrayList<Faculty> facultyList = new ArrayList<>();
         ArrayList<Student> studentList = new ArrayList<>();
         ArrayList<GeneralStaff> staffList = new ArrayList<>();
+        FacultyRepository facultyRepo = new FacultyRepository();
+        CourseRepository courseRepo = new CourseRepository();
 
         FileInputStream fbs = null;
         Scanner inFS = null;
@@ -105,6 +107,24 @@ public class Driver_SchoolDB {
         catch (IOException e){
             System.out.println("Error reading file");
         }
+
+        for(Faculty f : facultyList){
+            facultyRepo.add(f);
+        }
+        for(Course c : courseList){
+            courseRepo.add(c);
+        }
+
+        FacultyService facultyService = new FacultyService(facultyRepo, courseRepo);
+
+            try {
+                List<Course> coursesToAdd = new ArrayList<>();
+                coursesToAdd.add(courseList.get(0));  // Add first course from list
+                facultyService.addCoursesToFaculty(1, coursesToAdd);  // Add to faculty ID 1
+                System.out.println("SUCCESS: Service layer works!");
+            } catch (Exception e) {
+                System.out.println("ERROR: " + e.getMessage());
+            }
 
         // Comment out to run on ZYbooks
         Boolean running = true;
