@@ -127,6 +127,7 @@ public class Driver_SchoolDB {
             }
 
         // Comment out to run on ZYbooks
+            /*
         Boolean running = true;
         Scanner scnr = new Scanner(System.in);
 
@@ -196,6 +197,8 @@ public class Driver_SchoolDB {
             writeToFile(fileName,courseList,facultyList,studentList,staffList);
 
             printAllData(courseList,facultyList,studentList,staffList);
+
+             */
     }
     private static void displayMainMenu() {
             System.out.println("\n=== MENU ===");
