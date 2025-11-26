@@ -125,11 +125,16 @@ public class Driver_SchoolDB {
             } catch (Exception e) {
                 System.out.println("ERROR: " + e.getMessage());
             }
+            Scanner scnr = new Scanner(System.in);
+            FacultyMenuController facultyController = new FacultyMenuController(
+                    scnr,
+                    facultyRepo,
+                    courseRepo,
+                    facultyService
+            );
 
-        // Comment out to run on ZYbooks
-            /*
+
         Boolean running = true;
-        Scanner scnr = new Scanner(System.in);
 
         while(running){
             try {
@@ -183,6 +188,9 @@ public class Driver_SchoolDB {
                     case 15:
                         printAllData(courseList, facultyList, studentList, staffList);
                         break;
+                    case 16:
+                        facultyController.addCoursesToFaculty();
+                        break;
                     case 0:
                         running = false;
                         break;
@@ -198,7 +206,6 @@ public class Driver_SchoolDB {
 
             printAllData(courseList,facultyList,studentList,staffList);
 
-             */
     }
     private static void displayMainMenu() {
             System.out.println("\n=== MENU ===");
@@ -217,6 +224,7 @@ public class Driver_SchoolDB {
             System.out.println("13. Find Min/Max Course");
             System.out.println("14. Student with Most/Least Credits");
             System.out.println("15. Display All Data");
+            System.out.println("16. Add Courses to Faculty (New Controller)");
             System.out.println("0. Exit and Save");
             System.out.print("\nEnter choice: ");
     }

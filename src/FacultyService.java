@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FacultyService {
@@ -11,10 +12,12 @@ public class FacultyService {
         this.courseRepository = courseRepo;
     }
 
-    // Add this method:
-    public void addCoursesToFaculty(int facultyId, List<Course> courses) {
+
+    public List<Course> addCoursesToFaculty(int facultyId, List<Course> courses) {
+        ArrayList <Course> addedCourses = new ArrayList<>();
         // Find Faculty Member
         Faculty faculty = facultyRepository.findById(facultyId);
+
         if (faculty == null){
             throw new IllegalArgumentException("Faculty not found");
         }
@@ -35,8 +38,10 @@ public class FacultyService {
 
             //Add Course
                 if(!alreadyTeaching){
-                 faculty.addCourseTaught(existingCourse);
+                    faculty.addCourseTaught(existingCourse);
+                    addedCourses.add(existingCourse);
                 }
             }
+            return addedCourses;
         }
     }
