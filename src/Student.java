@@ -65,9 +65,7 @@ public class Student extends Person {
         this.major = major;
     }
     public void addCourseTaken(Course course){
-        if(coursesTaken.size() < 50) {
             coursesTaken.add(course);
-        }
     }
     public void addCoursesTaken(Course [] courses){
         for (Course cou : courses){

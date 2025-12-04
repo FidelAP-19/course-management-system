@@ -43,10 +43,8 @@ public void setIsTenured(boolean isTenured){
     this.isTenured = isTenured;
 }
 public void addCourseTaught(Course course) {
-    if (coursesTaught.size() < 100) {
         coursesTaught.add(course);
         numCoursesTaught = coursesTaught.size();
-    }
 }
 public void addCoursesTaught(Course [] courses){
     for(Course course : courses){
