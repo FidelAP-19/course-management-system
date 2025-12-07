@@ -1,5 +1,4 @@
 
-
 import java.util.*;
 import java.io.FileInputStream;
 import java.util.Scanner;
@@ -7,6 +6,10 @@ import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.io.IOException;
+import domain.*;
+import repository.*;
+import service.*;
+import controller.*;
 
 public class Driver_SchoolDB {
 
@@ -104,9 +107,6 @@ public class Driver_SchoolDB {
         catch (FileNotFoundException e){
             System.out.println("Cannot find file");
         }
-        catch (IOException e){
-            System.out.println("Error reading file");
-        }
 
         for(Faculty f : facultyList){
             facultyRepo.add(f);
@@ -131,6 +131,20 @@ public class Driver_SchoolDB {
                     facultyRepo,
                     courseRepo,
                     facultyService
+            );
+            // Create Student components
+            StudentRepository studentRepo = new StudentRepository();
+            for (Student s : studentList) {
+                studentRepo.add(s);
+            }
+
+            StudentService studentService = new StudentService(studentRepo, courseRepo);
+
+            StudentMenuController studentController = new StudentMenuController(
+                    scnr,
+                    studentService,
+                    courseRepo,
+                    studentRepo
             );
 
 
@@ -191,6 +205,9 @@ public class Driver_SchoolDB {
                     case 16:
                         facultyController.addCoursesToFaculty();
                         break;
+                    case 17:
+                        studentController.addCoursesToStudent();
+                        break;
                     case 0:
                         running = false;
                         break;
@@ -225,6 +242,7 @@ public class Driver_SchoolDB {
             System.out.println("14. Student with Most/Least Credits");
             System.out.println("15. Display All Data");
             System.out.println("16. Add Courses to Faculty (New Controller)");
+            System.out.println("17. Add Courses to Student (New Controller)");
             System.out.println("0. Exit and Save");
             System.out.print("\nEnter choice: ");
     }
