@@ -1,10 +1,17 @@
-# IntelliJ
-.idea/
-*.iml
-out/
-
-# Compiled files
+# Compiled class files
 *.class
 
-# Mac
+# Package files
+*.jar
+*.war
+
+# IDE files
+.idea/
+*.iml
+.vscode/
 .DS_Store
+
+# Build directories
+out/
+bin/
+target/
