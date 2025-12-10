@@ -444,3 +444,85 @@ You can call methods on the result of other methods!
 - Can run `mvn test` to verify code works
 - Confidence that refactoring doesn't break things
 - Ready for Spring Boot in Week 3!
+
+## Week 2, Session 1: Maven Setup & Unit Testing [December 10, 2025]
+
+### What I Accomplished
+
+**✅ Maven Build System:**
+- Created pom.xml with project coordinates (com.TonyPerez:course-management-system:1.0-SNAPSHOT)
+- Reorganized project to Maven structure (src/main/java, src/test/java)
+- Fixed package declarations after directory restructure
+- Successfully compiled with `mvn compile`
+- Packaged application with `mvn package`
+- Understood Maven lifecycle: clean → compile → test → package
+
+**✅ Dependency Management:**
+- Added JUnit 5.10.0 dependency to pom.xml
+- Watched Maven automatically download 7 transitive dependencies
+- Understood `<scope>test</scope>` keeps test libraries out of production JAR
+- Learned about Maven Central Repository and ~/.m2/repository/
+
+**✅ Unit Testing with JUnit 5:**
+- Created CourseRepositoryTest (2 tests for data access layer)
+- Created FacultyServiceTest (5 tests for business logic layer)
+- Wrote tests for: happy path, exceptions, edge cases, duplicates
+- All 7 tests passing with BUILD SUCCESS
+
+### What I Learned
+
+#### Big Conceptual Breakthroughs:
+
+1. **Maven is a Project Manager, Not Just a Build Tool:**
+    - Manages dependencies automatically (downloads + transitive deps)
+    - Provides standard project structure
+    - Handles build lifecycle
+    - Detects compilation order from import statements (not folder names!)
+
+2. **Arrange-Act-Assert (AAA) Testing Pattern:**
+    - **Arrange:** Set up test data and dependencies
+    - **Act:** Call the method being tested
+    - **Assert:** Verify the expected outcome
+    - This pattern makes tests readable and maintainable
+
+3. **Assertions are Quality Control Checkpoints:**
+    - `assertEquals(expected, actual)` - values must match
+    - `assertNotNull(actual)` - value must not be null
+    - `assertNull(actual)` - value must be null
+    - `assertTrue/assertFalse(condition)` - condition must be true/false
+    - `assertThrows(Exception.class, code)` - code must throw exception
+    - Optional third parameter provides custom failure message
+
+4. **Test Naming Convention Matters:**
+    - Format: `test[MethodName]_[Scenario]_[ExpectedBehavior]`
+    - Example: `testAddCoursesToFaculty_FacultyNotFound_ThrowsException`
+    - Long names are GOOD - they're documentation
+    - Maven's Surefire plugin finds tests by pattern: `*Test.java`
+
+5. **Testing Business Logic vs Data Access:**
+    - Repository tests are simple (CRUD operations)
+    - Service tests are complex (business rules, validation, exceptions)
+    - Service layer is most critical to test (where bugs hide!)
+
+6. **Errors vs Expected Scenarios:**
+    - Errors throw exceptions (faculty doesn't exist)
+    - Expected scenarios handle gracefully (duplicate courses)
+    - Understanding this distinction = professional design thinking
+
+#### Technical Skills:
+
+- **Maven Commands:**
+    - `mvn clean` - Delete target/ directory
+    - `mvn compile` - Compile src/main/java
+    - `mvn test` - Compile and run all tests (use this most often!)
+    - `mvn clean test` - Fresh build + test (use before commits)
+    - `mvn package` - Create JAR file in target/
+
+- **Maven Coordinates (GAV):**
+    - groupId: Organization (com.TonyPerez)
+    - artifactId: Project name (course-management-system)
+    - version: Release version (1.0-SNAPSHOT)
+    - Together they uniquely identify a project in Maven Central
+
+- **Testing Exception Scenarios:**
+```java
