@@ -1,6 +1,6 @@
-package repository;
+package com.TonyPerez.coursemanagement.repository;
 
-import domain.Course;
+import com.TonyPerez.coursemanagement.domain.Course;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,13 +1,13 @@
-package service;
+package com.TonyPerez.coursemanagement.service;
 
-import repository.CourseRepository;
-import repository.FacultyRepository;
-import java.util.ArrayList;
-import java.util.List;
-import domain.Course;
-import domain.Faculty;
+import com.TonyPerez.coursemanagement.repository.CourseRepository;
+import com.TonyPerez.coursemanagement.repository.FacultyRepository;
+import com.TonyPerez.coursemanagement.domain.Course;
+import com.TonyPerez.coursemanagement.domain.Faculty;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FacultyServiceTest {
     @Test

@@ -1,10 +1,10 @@
-package controller;
+package com.TonyPerez.coursemanagement.controller;
 
-import domain.Course;
-import domain.Faculty;
-import repository.CourseRepository;
-import repository.FacultyRepository;
-import service.FacultyService;
+import com.TonyPerez.coursemanagement.domain.Course;
+import com.TonyPerez.coursemanagement.domain.Faculty;
+import com.TonyPerez.coursemanagement.repository.CourseRepository;
+import com.TonyPerez.coursemanagement.repository.FacultyRepository;
+import com.TonyPerez.coursemanagement.service.FacultyService;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -97,7 +97,8 @@ public class FacultyMenuController {
         return userFacultyId;
     }
     private void displayFacultyDetails(int facultyId) {
-        Faculty faculty = facultyRepository.findById(facultyId);
+        Faculty faculty = facultyRepository.findById(facultyId)
+                .orElse(null);
         if (faculty != null) {
             System.out.printf("ID: %d | Name: %s | Dept: %s | Courses: %s%n ",
                     faculty.getEmployeeID(),

@@ -1,10 +1,10 @@
-package controller;
+package com.TonyPerez.coursemanagement.controller;
 
-import domain.Course;
-import domain.Student;
-import repository.CourseRepository;
-import repository.StudentRepository;
-import service.StudentService;
+import com.TonyPerez.coursemanagement.domain.Course;
+import com.TonyPerez.coursemanagement.domain.Student;
+import com.TonyPerez.coursemanagement.repository.CourseRepository;
+import com.TonyPerez.coursemanagement.repository.StudentRepository;
+import com.TonyPerez.coursemanagement.service.StudentService;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -98,7 +98,8 @@ public class StudentMenuController {
         return userStudentId;
     }
     public void displayStudentDetails(int studentId) {
-        Student student = studentRepository.findById(studentId);
+        Student student = studentRepository.findById(studentId)
+                .orElse(null);
         if (student != null) {
             System.out.printf("ID: %d | Name: %s | Courses: %s%n ",
                     student.getStudentID(),

@@ -1,58 +1,60 @@
-package domain;
+package com.TonyPerez.coursemanagement.domain;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "student")
 public class Student extends Person {
-    static private int numStudents = 0;
-    private int numCoursesTaken;
-    private int studentID = 0;
-    private ArrayList <Course> coursesTaken;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int studentID;
+
+    //private int numCoursesTaken;
+    @ManyToMany
+    @JoinTable(
+            name = "student_courses",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List <Course> coursesTaken;
     private boolean isGraduate;
     private String major;
 
     public Student(){
         super();
-        numCoursesTaken = 0;
+        //numCoursesTaken = 0;
         isGraduate = false;
         coursesTaken = new ArrayList<>();
         major = "undeclared";
-        numStudents++;
-        studentID = numStudents;
     }
     public Student(boolean isGraduate){
         super();
         this.isGraduate = isGraduate;
-        numCoursesTaken = 0;
+        //numCoursesTaken = 0;
         this.coursesTaken = new ArrayList<>();
         major = "undeclared";
-        numStudents++;
-        studentID = numStudents;
     }
     public Student(String major, boolean isGraduate){
         super();
         this.isGraduate = isGraduate;
-        numCoursesTaken = 0;
+       // numCoursesTaken = 0;
         this.coursesTaken = new ArrayList<>();
         this.major = major;
-        numStudents++;
-        studentID = numStudents;
     }
     public Student(String name, int birthYear, String major, boolean isGraduate){
        super(name,birthYear);
        this.coursesTaken = new ArrayList<>();
        this.major = major;
        this.isGraduate = isGraduate;
-       numStudents++;
-        studentID = numStudents;
+
     }
     public boolean isGraduate(){
         return isGraduate;
     }
     public int getNumCoursesTaken(){
         return coursesTaken.size();
-    }
-    public static int getNumStudents(){
-        return numStudents;
     }
     public int getStudentID(){
         return studentID;

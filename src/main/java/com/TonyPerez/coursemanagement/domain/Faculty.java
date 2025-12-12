@@ -1,23 +1,33 @@
-package domain;
-import java.util.ArrayList;
+package com.TonyPerez.coursemanagement.domain;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "faculty")
 public class Faculty extends Employee{
-private ArrayList<Course> coursesTaught;
-private int numCoursesTaught;
-private boolean isTenured;
+    @ManyToMany
+    @JoinTable(
+            name = "faculty_courses",
+            joinColumns = @JoinColumn(name = "faculty_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> coursesTaught;
+
+    @Column(name = "is_tenured")
+    private boolean isTenured;
 
 
 public Faculty(){
     super();
     coursesTaught = new ArrayList<>();
-    numCoursesTaught = 0;
     isTenured = false;
 
 }
 public Faculty(boolean isTenured){
     super();
     coursesTaught = new ArrayList<>();
-    numCoursesTaught = 0;
     this.isTenured = isTenured;
 
 }
@@ -25,12 +35,10 @@ public Faculty(String deptName, boolean isTenured){
     super(deptName);
     coursesTaught = new ArrayList<>();
     this.isTenured = isTenured;
-    numCoursesTaught = 0;
 }
 public Faculty(String name, int birthYear, String deptName, boolean isTenured){
     super(name, birthYear, deptName);
     this.isTenured = isTenured;
-    numCoursesTaught = 0;
     coursesTaught = new ArrayList<>();
 }
 
@@ -45,13 +53,13 @@ public void setIsTenured(boolean isTenured){
 }
 public void addCourseTaught(Course course) {
         coursesTaught.add(course);
-        numCoursesTaught = coursesTaught.size();
+      //  numCoursesTaught = coursesTaught.size();
 }
 public void addCoursesTaught(Course [] courses){
     for(Course course : courses){
         coursesTaught.add(course);
     }
-    numCoursesTaught = coursesTaught.size();
+  //  numCoursesTaught = coursesTaught.size();
 }
 public Course getCourseTaught(int index){
     if (index >= coursesTaught.size()|| index < 0){
@@ -111,8 +119,6 @@ public String getAllCoursesTaughtAsString(){
         }
         Faculty other = (Faculty) p;
 
-        if(this.getNumCoursesTaught() > other.getNumCoursesTaught()) return 1;
-        if (this.getNumCoursesTaught() < other.getNumCoursesTaught()) return -1;
-        return 0;
+        return Integer.compare(this.getNumCoursesTaught(), other.getNumCoursesTaught());
     }
 }

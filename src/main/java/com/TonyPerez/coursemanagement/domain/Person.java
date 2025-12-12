@@ -1,7 +1,13 @@
-package domain;
+package com.TonyPerez.coursemanagement.domain;
 
+import jakarta.persistence.*;
+
+@MappedSuperclass
 public class Person implements Comparable<Person> {
+    @Column(name="name", length = 100)
     private String name;
+
+    @Column(name ="birth_year")
     private int birthYear;
 
     public Person(){

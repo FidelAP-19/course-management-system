@@ -1,31 +1,29 @@
-package domain;
+package com.TonyPerez.coursemanagement.domain;
 
+import jakarta.persistence.*;
+
+@MappedSuperclass // Base class for entities
 public class Employee extends Person{
-    private String deptName;
-    static private int numEmployees = 0;
+    @Id //Primary Key
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="employee_id")
     private int employeeID;
+
+    @Column(name="dept_name", length = 50)
+    private String deptName;
 
     public Employee(){
         deptName = "";
-        numEmployees++;
-        employeeID = numEmployees;
     }
     public Employee(String deptName){
         this.deptName = deptName;
-        numEmployees++;
-        employeeID = numEmployees;
     }
     public Employee(String name, int birthYear, String deptName){
         super(name, birthYear);
         setDeptName(deptName);
-        numEmployees++;
-        employeeID = numEmployees;
     }
     public String getDeptName(){
         return deptName;
-    }
-    public static int getNumEmployees(){
-        return numEmployees;
     }
     public int getEmployeeID(){
         return employeeID;
@@ -62,12 +60,6 @@ public class Employee extends Person{
         }
         Employee other = (Employee) p;
 
-        if(this.employeeID > other.employeeID){
-            return 1;
-        }
-        if(this.employeeID < other.employeeID){
-            return -1;
-        }
-        return 0;
+        return Integer.compare(this.employeeID, other.employeeID);
     }
 }

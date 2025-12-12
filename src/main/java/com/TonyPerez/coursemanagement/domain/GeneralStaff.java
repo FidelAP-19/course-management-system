@@ -1,4 +1,6 @@
-package domain;
+package com.TonyPerez.coursemanagement.domain;
+
+import jakarta.persistence.*;
 
 public class GeneralStaff extends Employee{
     private String duty;
