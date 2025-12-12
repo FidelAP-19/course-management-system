@@ -22,8 +22,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     /**
      * Find course by department and course number (natural key).
-     * Spring parses the method name and generates SQL:
-     * SELECT * FROM course WHERE course_dept = ? AND course_num = ?
      *
      * @param courseDept the department code (e.g., "CMP")
      * @param courseNum the course number (e.g., 168)
