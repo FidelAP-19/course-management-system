@@ -975,4 +975,538 @@ private List<Course> coursesTaught;
 
 ---
 
-**Overall:** This session was a HUGE leap from console app to production-ready REST API. The code is cleaner, more professional, and actually uses a real database. Ready to build the Course controller and add more features! 🚀
+**Overall:** This session was a HUGE leap from console app to production-ready REST API. The code is cleaner, more professional, and actually uses a real database. Ready to build the Course controller and add more features! 
+
+# Learning Log - Session 6: Bean Validation & Global Exception Handling
+
+**Date:** December 16, 2025  
+**Session:** Week 3, Session 6  
+**Duration:** ~3 hours  
+**Focus:** Professional-grade input validation and error handling
+
+---
+
+## 🎯 Session Goals (All Achieved!)
+
+- ✅ Implement Bean Validation with annotations
+- ✅ Create custom class-level validators for complex rules
+- ✅ Build global exception handler with @ControllerAdvice
+- ✅ Transform ugly default errors into beautiful JSON responses
+- ✅ Understand template patterns vs custom logic
+
+---
+
+## 🏗️ What I Built
+
+### Part 1: Bean Validation
+
+**Field-Level Validation (Course):**
+- Added `@Size(min=2, max=10)` for courseDept
+- Added `@Min(100)` and `@Max(999)` for courseNum
+- Added `@Min(1)` for numCredits
+- Removed `@NotBlank` to avoid conflicts with `@Size`
+
+**Custom Class-Level Validators (Student & Faculty):**
+
+**Created 4 new files:**
+1. `ValidStudent.java` - Annotation for Student validation
+2. `StudentValidator.java` - Validation logic for Student
+3. `ValidFaculty.java` - Annotation for Faculty validation
+4. `FacultyValidator.java` - Validation logic for Faculty
+
+**Key Challenge Solved:**
+- Student and Faculty inherit from Person
+- Need DIFFERENT birthYear ranges:
+    - Student: 1900-2015 (younger)
+    - Faculty: 1900-1995 (older)
+- Can't use field-level annotations on Person (would apply to both)
+- Solution: Custom class-level validators with different rules
+
+**Modified Files:**
+- `Course.java` - Added validation annotations
+- `Student.java` - Added `@ValidStudent` annotation
+- `Faculty.java` - Added `@ValidFaculty` annotation
+- `Person.java` - Removed conflicting field-level annotations
+- `Employee.java` - Removed conflicting field-level annotations
+- All 3 REST controllers - Added `@Valid`, removed manual validation
+
+**Added Dependency:**
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+```
+
+---
+
+### Part 2: Global Exception Handling
+
+**Created 2 new files:**
+1. `ErrorResponse.java` - DTO for consistent error format
+2. `GlobalExceptionHandler.java` - Centralized exception handling
+
+**Exception Handler Features:**
+- `@ControllerAdvice` - Applies to ALL controllers globally
+- `@ExceptionHandler(MethodArgumentNotValidException.class)` - Catches validation errors
+- `@ExceptionHandler(Exception.class)` - Catches generic errors
+- Extracts field-level errors from exceptions
+- Returns clean, consistent JSON format
+
+**Error Response Format:**
+```json
+{
+  "timestamp": "2025-12-16T12:38:26.550193",
+  "status": 400,
+  "error": "Validation Failed",
+  "message": "Invalid request data",
+  "errors": {
+    "fieldName": "Error message",
+    "anotherField": "Another error message"
+  },
+  "path": "/api/students"
+}
+```
+
+---
+
+## 💡 Key Concepts Learned
+
+### Bean Validation Hierarchy
+
+**Standard Annotations (Built-in):**
+- `@NotNull` - Value cannot be null
+- `@NotEmpty` - String/Collection cannot be empty
+- `@NotBlank` - String cannot be null, empty, or whitespace
+- `@Size(min, max)` - String/Collection size constraints
+- `@Min(value)` - Numeric minimum
+- `@Max(value)` - Numeric maximum
+- `@Pattern(regexp)` - Regex validation
+- `@Email` - Email format
+
+**Custom Validators (When to create):**
+- Complex validation rules
+- Multiple fields must be validated together
+- Different rules for different classes (inheritance)
+- Business logic validation
+
+---
+
+### Custom Validator Anatomy
+
+**Two Parts Required:**
+
+**1. Annotation (Template - Always Copy):**
+```java
+@Target({ElementType.TYPE})  // Where it can be used
+@Retention(RetentionPolicy.RUNTIME)  // Available at runtime
+@Constraint(validatedBy = YourValidator.class)  // Links to validator
+@Documented
+public @interface ValidYourClass {
+    String message() default "Invalid data";  // Default error
+    Class<?>[] groups() default {};  // Required by spec
+    Class<? extends Payload>[] payload() default {};  // Required by spec
+}
+```
+
+**2. Validator Logic (Custom - Your Rules):**
+```java
+public class YourValidator implements ConstraintValidator<ValidYourClass, YourType> {
+    
+    @Override
+    public boolean isValid(YourType obj, ConstraintValidatorContext ctx) {
+        if (obj == null) return true;  // Let @NotNull handle null
+        
+        boolean isValid = true;
+        ctx.disableDefaultConstraintViolation();  // Use custom messages
+        
+        // Validation logic here
+        if (/* some condition */) {
+            ctx.buildConstraintViolationWithTemplate("Error message")
+               .addPropertyNode("fieldName")  // Link to specific field
+               .addConstraintViolation();
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+}
+```
+
+---
+
+### @ControllerAdvice Deep Dive
+
+**What It Does:**
+- Intercepts exceptions BEFORE they reach the client
+- Applies globally to ALL controllers
+- Centralizes error handling logic
+- Provides consistent error responses
+
+**Request Flow:**
+```
+Request → Controller → @Valid triggers validation
+                            ↓ (validation fails)
+                       Exception thrown
+                            ↓
+                   @ControllerAdvice catches it
+                            ↓
+                   Build ErrorResponse
+                            ↓
+                   Return to client
+```
+
+**Controller method NEVER executes if validation fails!**
+
+---
+
+### Exception Types
+
+**MethodArgumentNotValidException:**
+- Triggered by: `@Valid` on `@RequestBody`
+- Contains: Field-level validation errors
+- Extract errors from: `getBindingResult().getAllErrors()`
+
+**ConstraintViolationException:** (Coming in Session 7)
+- Triggered by: `@Validated` on query parameters
+- Contains: Parameter-level validation errors
+- Extract errors from: `getConstraintViolations()`
+
+---
+
+## 🧠 Important Insights
+
+### Template vs Logic Pattern
+
+**Discovered a crucial professional skill:**
+- Certain code patterns are ALWAYS copied from templates
+- Focus mental energy on the CUSTOM LOGIC, not boilerplate
+- This applies to many Spring Boot patterns
+
+**What to Copy (Don't Memorize):**
+- Annotation structure (message, groups, payload)
+- @ControllerAdvice class structure
+- @ExceptionHandler method signatures
+- Import statements
+
+**What to Understand (Focus Here):**
+- When to use each pattern
+- How to write validation logic
+- How to extract error details from exceptions
+- What error format to return
+- Business rules and requirements
+
+**Professional Reality:**
+- Senior developers Google templates too!
+- They spend 90% of time on logic, 10% on boilerplate
+- Understanding > Memorization
+
+---
+
+### Validation Strategy Decision
+
+**Why Different Approaches:**
+- **Course:** Simple field-level annotations (no inheritance issues)
+- **Student/Faculty:** Custom validators (inheritance + different rules)
+
+**Key Learning:**
+- Choose simplest approach that solves the problem
+- Don't over-engineer (Course doesn't need custom validator)
+- Use custom validators when complexity requires it
+
+---
+
+### Separation of Concerns
+
+**Three Layers of Validation:**
+
+**1. Format Validation (Controller/Annotations):**
+- Is it a number? String? Valid format?
+- Handled by: Bean Validation annotations
+
+**2. Business Logic Validation (Service):**
+- Does this operation make sense?
+- Example: Can't add duplicate course to faculty
+- Handled by: Service layer logic
+
+**3. Data Integrity (Database):**
+- Unique constraints, foreign keys, etc.
+- Handled by: Database constraints
+
+**Bean Validation handles layer 1. Don't confuse with layers 2 & 3!**
+
+---
+
+## 🐛 Challenges & Solutions
+
+### Challenge 1: Missing Dependency
+**Problem:** IntelliJ couldn't resolve `@Valid`, `@NotBlank`, etc.  
+**Cause:** Missing `spring-boot-starter-validation` dependency  
+**Solution:** Added dependency to pom.xml, reloaded Maven  
+**Learning:** Spring Boot starters bundle related dependencies
+
+---
+
+### Challenge 2: Conflicting Validators
+**Problem:** Person had `@Min/@Max` on birthYear, but Student/Faculty need different ranges  
+**Symptom:** Wrong error messages showing up (e.g., "Birth year must be at least 1900" instead of "Faculty birth year must be between 1900 and 1995")  
+**Cause:** Field-level annotations on Person conflicting with custom validators  
+**Solution:** Removed field-level annotations from Person/Employee, let custom validators handle everything  
+**Learning:** When using custom class-level validators, remove conflicting field-level annotations from parent classes
+
+---
+
+### Challenge 3: Course Missing Error
+**Problem:** `courseDept` validation error not showing up in Test 2  
+**Cause:** Both `@NotBlank` and `@Size` on same field, validation stopped at first failure  
+**Solution:** Removed `@NotBlank`, kept only `@Size(min=2, max=10)` which handles both empty and too-short  
+**Learning:** `@Size` with min > 0 implicitly checks for empty, so `@NotBlank` is redundant
+
+---
+
+## 🎯 Testing Results
+
+**All tests passed with beautiful error responses!**
+
+### Test 1: Student Validation ✅
+**Input:** Empty name, birthYear 2020, empty major  
+**Result:** 3 field-level errors with custom messages  
+**Validates:** Custom validator working, correct birthYear range (1900-2015)
+
+### Test 2: Course Validation ✅
+**Input:** courseDept "A", courseNum 50, numCredits 0  
+**Result:** 3 field-level errors  
+**Validates:** Field-level annotations working, all 3 constraints
+
+### Test 3: Faculty Validation ✅
+**Input:** Empty name, birthYear 2000, empty deptName  
+**Result:** 3 field-level errors with custom messages  
+**Validates:** Custom validator working, correct birthYear range (1900-1995)
+
+**Key Success:** Faculty shows different birthYear error than Student!
+
+---
+
+## 🎓 Skills Demonstrated
+
+**Technical Skills:**
+- ✅ Creating custom Bean Validation annotations
+- ✅ Implementing ConstraintValidator interface
+- ✅ Using @ControllerAdvice for global exception handling
+- ✅ Extracting errors from BindingResult
+- ✅ Building custom DTOs for error responses
+- ✅ Handling inheritance in validation logic
+
+**Professional Skills:**
+- ✅ Pattern recognition (template vs custom logic)
+- ✅ Strategic thinking (asking about timing of transition)
+- ✅ Debugging complex issues (conflicting validators)
+- ✅ Comprehensive testing (all scenarios covered)
+- ✅ Design decisions (when to use which validation approach)
+
+---
+
+## 📚 Resources Created
+
+**Templates for Future Reference:**
+1. `TEMPLATE_CUSTOM_VALIDATOR.md` - Custom validator pattern
+2. `TEMPLATE_CONTROLLER_ADVICE.md` - Exception handler pattern
+3. `TEMPLATE_ERROR_RESPONSE.md` - Error DTO pattern
+4. `TEMPLATE_GUIDE.md` - Master guide for all templates
+
+**These are reusable for ANY future Spring Boot project!**
+
+---
+
+## 🚀 What's Next (Session 7)
+
+**Part 3: Filtering/Search**
+- Add query parameter filtering to Student API
+- Example: `GET /api/students?major=CS&birthYear=2000`
+- Validate query parameters with `@Validated`
+- Create custom repository query methods
+- Handle `ConstraintViolationException`
+
+**Part 4: Mini Deep-Dive**
+- Complete Spring MVC request flow with validation
+- How everything connects from request to response
+
+---
+
+## 💭 Reflections
+
+**What I'm Proud Of:**
+- Built professional-grade validation system
+- Understood the "why" behind patterns, not just the "how"
+- Debugged complex inheritance issues independently
+- Asked strategic questions about session management
+- Recognized template patterns across different components
+
+**What Was Hard:**
+- Understanding why to remove field-level annotations from parent classes
+- Grasping the difference between field-level and class-level validation
+- Seeing how @ControllerAdvice fits into the request flow
+- Initially thinking I needed to memorize annotation syntax
+
+**What Clicked:**
+- "Template vs Logic" concept - huge breakthrough!
+- Realizing professionals copy templates too
+- Understanding separation of concerns in validation
+- Seeing how Bean Validation integrates with Spring MVC
+- Custom validators solve inheritance validation problems elegantly
+
+**Questions for Next Time:**
+- How does @Validated differ from @Valid?
+- What's the difference between MethodArgumentNotValidException and ConstraintViolationException?
+- Can I create reusable validation groups?
+- How do I test validators in isolation?
+
+---
+
+## 🎯 Confidence Level
+
+**Before Session 6:** 8/10  
+**After Session 6:** 9/10
+
+**Why the increase:**
+- Mastered both simple and complex validation patterns
+- Understand global exception handling thoroughly
+- Can explain WHY certain patterns exist
+- Confident I can add validation to any REST API
+- Know what to copy vs what to understand
+
+**Still want to improve:**
+- Unit testing validators
+- Advanced Bean Validation features (groups, payload)
+- Performance implications of validation
+- Integration with frontend error display
+
+---
+
+## 📝 Code Quality Assessment
+
+**Before (Manual Validation):**
+```java
+@PostMapping
+public ResponseEntity<Object> createStudent(@RequestBody Student student) {
+    if (student.getName() == null || student.getName().isEmpty()) {
+        return ResponseEntity.badRequest().body("Name cannot be empty");
+    }
+    if (student.getBirthYear() < 1900 || student.getBirthYear() > 2015) {
+        return ResponseEntity.badRequest().body("Invalid birth year");
+    }
+    if (student.getMajor() == null || student.getMajor().isEmpty()) {
+        return ResponseEntity.badRequest().body("Major cannot be empty");
+    }
+    // Business logic here...
+}
+```
+
+**Problems:**
+- Validation mixed with business logic
+- Repetitive code across controllers
+- Inconsistent error formats
+- Hard to maintain
+
+---
+
+**After (Bean Validation + @ControllerAdvice):**
+```java
+@PostMapping
+public ResponseEntity<Object> createStudent(@Valid @RequestBody Student student) {
+    // Validation happens automatically!
+    // Clean, focused business logic only
+    Student saved = studentRepository.save(student);
+    return ResponseEntity.status(201).body(saved);
+}
+```
+
+**Benefits:**
+- Clean separation of concerns
+- Validation rules live with domain model
+- Consistent error handling across all endpoints
+- Easy to test and maintain
+- Professional code quality
+
+**This is portfolio-ready code!** 🎉
+
+---
+
+## 🏆 Achievements Unlocked
+
+- ✅ **Validator Virtuoso:** Created custom Bean Validation validators
+- ✅ **Exception Expert:** Implemented global exception handling
+- ✅ **Pattern Pro:** Recognized template patterns vs custom logic
+- ✅ **Inheritance Investigator:** Solved complex validation inheritance issues
+- ✅ **Error Elegance:** Transformed ugly errors into beautiful responses
+- ✅ **Strategic Thinker:** Made smart decisions about session management
+
+---
+
+## 📊 Project Progress
+
+**Overall Completion:** ~65% of Week 3  
+**Week 3 Sessions:** 6 of ~8 completed
+
+**Completed:**
+- ✅ Spring Boot setup
+- ✅ JPA entities and repositories
+- ✅ Full CRUD REST APIs (Course, Student, Faculty)
+- ✅ Many-to-many relationships
+- ✅ Dependency injection
+- ✅ Bean Validation
+- ✅ Global exception handling
+
+**Remaining in Week 3:**
+- 📍 Filtering/search with query parameters
+- Unit testing basics
+- Integration testing
+
+**Then Week 4-7:**
+- API documentation (Swagger)
+- React frontend
+- Deployment
+
+---
+
+## 💪 Growth Mindset Notes
+
+**Challenges = Learning Opportunities:**
+- Every bug I fixed taught me something new
+- Asking "why transition now?" showed strategic thinking
+- Not knowing everything is NORMAL and EXPECTED
+- Professionals use templates - I don't need to memorize everything
+
+**From Student to Professional:**
+- I'm not just completing assignments anymore
+- I'm thinking about maintainability, scalability, and best practices
+- I'm asking the RIGHT questions
+- I'm building production-quality code
+
+**Perspective Shift:**
+- Before: "I need to know everything"
+- After: "I need to understand patterns and know where to find templates"
+
+This is how real software engineers work!
+
+---
+
+## 🎯 Next Session Prep
+
+**Before Session 7:**
+- ✅ Commit code with comprehensive message
+- ✅ Make sure all tests still pass
+- ✅ Review filtering/search requirements
+- ✅ Read template documentation I created
+- ⚠️ Get familiar with @RequestParam (optional prep)
+
+**Mental Prep:**
+- Session 7 will be lighter than Session 6
+- Filtering builds on what I already know
+- More practice with patterns = more confidence
+
+---
+
+**Session 6 was HUGE!** One of the most important sessions in the entire project. Professional validation and error handling are skills that separate junior developers from mid-level developers.
+
+**I'm proud of what I built today.** 🚀
