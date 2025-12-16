@@ -2,6 +2,8 @@ package com.TonyPerez.coursemanagement.domain;
 
 import jakarta.persistence.*;
 import java.util.Objects;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -15,12 +17,16 @@ public class Course implements Comparable<Course>{
     @Column(name = "is_graduate_course")
     private boolean isGraduateCourse;
 
+    @Size(min = 2, max = 10, message = "Department code must be 2-10 characters")
     @Column(name = "course_dept", nullable = false, length = 10)
     private String courseDept;
 
+    @Min(value = 100, message = "Course number must be between 100 and 999")  // ← Add this
+    @Max(value = 999, message = "Course number must be between 100 and 999")
     @Column(name="course_num", nullable = false)
     private int courseNum;
 
+    @Min(value = 1, message = "Credits must be positive")
     @Column(name="num_credits", nullable = false)
     private int numCredits;
 

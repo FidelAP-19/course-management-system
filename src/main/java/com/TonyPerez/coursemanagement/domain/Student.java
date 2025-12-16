@@ -1,11 +1,14 @@
 package com.TonyPerez.coursemanagement.domain;
 
+import com.TonyPerez.coursemanagement.validation.ValidStudent;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "student")
+@ValidStudent
 public class Student extends Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,12 +22,12 @@ public class Student extends Person {
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private List <Course> coursesTaken;
+
     private boolean isGraduate;
     private String major;
 
     public Student(){
         super();
-        //numCoursesTaken = 0;
         isGraduate = false;
         coursesTaken = new ArrayList<>();
         major = "undeclared";
@@ -32,14 +35,12 @@ public class Student extends Person {
     public Student(boolean isGraduate){
         super();
         this.isGraduate = isGraduate;
-        //numCoursesTaken = 0;
         this.coursesTaken = new ArrayList<>();
         major = "undeclared";
     }
     public Student(String major, boolean isGraduate){
         super();
         this.isGraduate = isGraduate;
-       // numCoursesTaken = 0;
         this.coursesTaken = new ArrayList<>();
         this.major = major;
     }

@@ -1,12 +1,17 @@
 package com.TonyPerez.coursemanagement.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @MappedSuperclass
 public class Person implements Comparable<Person> {
+
+    @NotBlank(message = "Name cannot be empty")
     @Column(name="name", length = 100)
     private String name;
 
+    @Min(value = 1900, message = "Birth year must be at least 1900")  // ← Add this
+    @Max(value = 2015, message = "Birth year must be at most 2015")
     @Column(name ="birth_year")
     private int birthYear;
 

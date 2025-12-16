@@ -5,6 +5,7 @@ import com.TonyPerez.coursemanagement.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,19 +38,12 @@ public class CourseRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createCourse(@RequestBody Course course){
+    public ResponseEntity<Object> createCourse(@Valid @RequestBody Course course){
 
-        if (course.getCourseDept() == null || course.getCourseDept().isEmpty()){
-            return ResponseEntity.badRequest().body("Course department cannot be empty");
-        }
-        if (course.getCourseNum() > 999 || course.getCourseNum() < 100){
-            return ResponseEntity.badRequest().body("Course number must be between 100 and 999");
-        }
-        if(course.getNumCredits() <= 0){
-            return ResponseEntity.badRequest().body("Course credits must be a positive number");
-        }
-
-        Course existing = courseRepository.findByCourseDeptAndCourseNum(course.getCourseDept(), course.getCourseNum());
+        Course existing = courseRepository.findByCourseDeptAndCourseNum(
+                course.getCourseDept(),
+                course.getCourseNum()
+        );
 
         if (existing != null) {
             boolean exactMatch = (

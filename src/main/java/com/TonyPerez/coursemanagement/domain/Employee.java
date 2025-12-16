@@ -1,6 +1,7 @@
 package com.TonyPerez.coursemanagement.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @MappedSuperclass // Base class for entities
 public class Employee extends Person{
@@ -9,6 +10,7 @@ public class Employee extends Person{
     @Column(name="employee_id")
     private int employeeID;
 
+    @NotBlank(message = "Department name cannot be empty")
     @Column(name="dept_name", length = 50)
     private String deptName;
 

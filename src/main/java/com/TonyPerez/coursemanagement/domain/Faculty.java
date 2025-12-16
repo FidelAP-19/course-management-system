@@ -3,9 +3,11 @@ package com.TonyPerez.coursemanagement.domain;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.TonyPerez.coursemanagement.validation.ValidFaculty;
 
 @Entity
 @Table(name = "faculty")
+@ValidFaculty
 public class Faculty extends Employee{
     @ManyToMany
     @JoinTable(
