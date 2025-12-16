@@ -1,4 +1,6 @@
-# Build files
+# Create .gitignore in project root
+cat > .gitignore << 'EOF'
+# Maven
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
@@ -6,6 +8,8 @@ target/
 .idea/
 *.iml
 .vscode/
+*.swp
+*.swo
 
 # OS
 .DS_Store
@@ -14,6 +18,8 @@ Thumbs.db
 # Logs
 *.log
 
-# Secrets (if you add them later)
-application-secret.properties
+# Secrets
+application-secrets.properties
 .env
+EOF
+
