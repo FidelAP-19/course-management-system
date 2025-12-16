@@ -1,3 +1,7 @@
+# Build files
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
 # Compiled class file
 *.class
 
@@ -9,6 +13,22 @@
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Secrets 
+application-secret.properties
+.env
 
 # Package Files #
 *.jar
