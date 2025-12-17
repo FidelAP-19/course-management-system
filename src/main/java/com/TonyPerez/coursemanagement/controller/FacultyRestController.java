@@ -6,13 +6,16 @@ import com.TonyPerez.coursemanagement.repository.CourseRepository;
 import com.TonyPerez.coursemanagement.repository.FacultyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Validated
 @RequestMapping("/api/faculty")
 public class FacultyRestController {
 
@@ -26,8 +29,22 @@ public class FacultyRestController {
     }
 
     @GetMapping
-    public List<Faculty> getAllFaculty() {
-        return facultyRepository.findAll();
+    public List<Faculty> getFaculty(
+            @RequestParam(required = false)
+            @Size(min = 1,max = 50, message = "Department must be 1-50 characters")
+            String deptName,
+            @RequestParam(required = false)
+            Boolean isTenured
+            ) {
+        if (deptName != null && isTenured != null){
+            return facultyRepository.findByDeptNameAndIsTenured(deptName, isTenured);
+        } else if (deptName != null) {
+            return facultyRepository.findByDeptName(deptName);
+        } else if (isTenured != null) {
+            return facultyRepository.findByIsTenured(isTenured);
+        } else{
+            return facultyRepository.findAll();
+        }
     }
 
     @GetMapping("/{id}")

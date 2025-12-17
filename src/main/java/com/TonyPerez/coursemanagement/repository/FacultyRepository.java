@@ -3,6 +3,7 @@ package com.TonyPerez.coursemanagement.repository;
 import com.TonyPerez.coursemanagement.domain.Faculty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 /**
  * Spring Data JPA repository for Faculty entity.
@@ -17,5 +18,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FacultyRepository extends JpaRepository<Faculty, Integer> {
-    // No custom methods needed for now
+
+    List <Faculty> findByDeptName(String deptName);
+    List <Faculty> findByIsTenured(Boolean isTenured);
+    List<Faculty> findByDeptNameAndIsTenured(String deptName, Boolean isTenured);
 }

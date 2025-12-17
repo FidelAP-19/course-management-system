@@ -6,4 +6,17 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
     </content>
   </component>
+  <component name="FacetManager">
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="Hibernate" />
+        <datasource-mapping>
+          <factory-entry name="course-management-system" value="1ff646a2-ede2-4b79-a90d-7aecf4d636f8" />
+          <factory-entry name="entityManagerFactory" />
+        </datasource-mapping>
+        <naming-strategy-map />
+      </configuration>
+    </facet>
+  </component>
 </module>
