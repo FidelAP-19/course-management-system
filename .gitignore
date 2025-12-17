@@ -23,3 +23,11 @@ application-secrets.properties
 .env
 EOF
 
+# Learning materials (keep local only)
+LEARNING_LOG.md
+MENTORSHIP_GUIDELINES.md
+TRANSITION_PACKAGE.md
+TEMPLATE_*.md
+*.md
+!README.md
+
