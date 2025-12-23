@@ -1,58 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import './App.css';
 
-function App() {
-    const [students, setStudents] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+function App(){
 
-    // Form state
-    const [formData, setFormData] = useState({
-        name: '',
-        birthYear: '',
-        major: '',
-        isGraduate: false
-    });
+const [ students, setStudents] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+const [formData, setFormData] = useState({
+    name: '',
+    birthYear: '',
+    major: '',
+    isGraduate: false
+});
 
-    // Fetch students
-    const fetchStudents = () => {
-        fetch('http://localhost:8080/api/students')
-            .then(response => response.json())
-            .then(data => {
-                setStudents(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                setError(error.message);
-                setLoading(false);
-            });
-    };
-
-    // Fetch on component load
-    useEffect(() => {
-        fetchStudents();
-    }, []);
-
-    // Handle form input changes
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
+const handleChange =  (e) => {
+    const {name, value, type, checked} = e.target;
+    setFormData(prev =>{
+        return{
             ...prev,
             [name]: type === 'checkbox' ? checked : value
-        }));
-    };
+        };
+    });
+};
 
-    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Convert birthYear to number
         const studentData = {
             ...formData,
             birthYear: parseInt(formData.birthYear)
         };
 
-        // POST to API
         fetch('http://localhost:8080/api/students', {
             method: 'POST',
             headers: {
@@ -60,7 +38,7 @@ function App() {
             },
             body: JSON.stringify(studentData)
         })
-            .then(response => {
+            .then(response=> {
                 if (!response.ok) {
                     throw new Error('Failed to create student');
                 }
@@ -75,21 +53,71 @@ function App() {
                     isGraduate: false
                 });
                 // Refresh student list
-                fetchStudents();
+                setLoading(true);
+                fetch('http://localhost:8080/api/students')
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        setStudents(data);
+                        setLoading(false);
+                    })
+                    .catch((error)=> {
+                        setError(error.message);
+                        setLoading(false);
+                    });
             })
-            .catch(error => {
+            .catch((error)=> {
                 alert('Error creating student: ' + error.message);
             });
     };
 
-    if (loading) return <div className="container">Loading students...</div>;
-    if (error) return <div className="container">Error: {error}</div>;
+    const handleDelete = (studentID) => {
+        if (!window.confirm('Are you sure you want to delete this student?')){
+            return;
+        }
+        fetch('http://localhost:8080/api/students/' + studentID,{
+            method: 'DELETE'
+        })
+        .then( response => {
+            if (!response.ok){
+                throw new Error ('Failed to delete student');
+            }
+            setStudents(prevStudents =>
+                prevStudents.filter(s => s.studentID !== studentID)
+            );
+        })
+            .catch(error => {
+                console.error('Delete error:', error);
+                alert('Error deleting student ' + error.message);
+            });
+    };
 
-    return (
-        <div className="container">
+    useEffect(() => {
+        fetch('http://localhost:8080/api/students')
+            .then(response => response.json())
+            .then(data => {
+                setLoading(false);
+                setStudents(data);
+            })
+            .catch(error => {
+                setError(error.message);
+                setLoading(false);
+                console.error('Error fetching students:', error);
+            });
+    }, []);
+
+    if (loading){
+        return <div className="container">Loading students.... </div>;
+    }
+    if(error){
+        return <div className="container">Error: {error}</div>
+    }
+
+    return(
+        <div className ="container">
             <h1>Course Management System</h1>
 
-            {/* Create Student Form */}
             <div className="form-section">
                 <h2>Add New Student</h2>
                 <form onSubmit={handleSubmit}>
@@ -127,7 +155,6 @@ function App() {
                             required
                         />
                     </div>
-
                     <div className="form-group">
                         <label>
                             <input
@@ -144,22 +171,23 @@ function App() {
                 </form>
             </div>
 
-            {/* Student List */}
-            <div className="student-list">
-                <h2>Students ({students.length})</h2>
-                {students.length === 0 ? (
-                    <p>No students yet. Add one above!</p>
-                ) : (
+                <div className= 'student-list'>
+                    <h2>Students ({students.length})</h2>
                     <ul>
-                        {students.map(student => (
+                        {students.map(student =>(
                             <li key={student.studentID}>
-                                <strong>{student.name}</strong> - {student.major} ({student.birthYear})
+                                <strong>{student.name}</strong> -  {student.major} ({student.birthYear})
                                 {student.graduate && <span className="badge">Graduate</span>}
+                                <button
+                                    onClick={() => handleDelete(student.studentID)}
+                                    className="delete-btn"
+                                    >
+                                    Delete
+                                </button>
                             </li>
                         ))}
                     </ul>
-                )}
-            </div>
+                </div>
         </div>
     );
 }
