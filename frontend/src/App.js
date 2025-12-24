@@ -6,6 +6,7 @@ function App(){
 const [ students, setStudents] = useState([]);
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState(null);
+const [searchTerm, setSearchTerm] = useState("");
 const [formData, setFormData] = useState({
     name: '',
     birthYear: '',
@@ -71,6 +72,8 @@ const handleChange =  (e) => {
                 alert('Error creating student: ' + error.message);
             });
     };
+
+    const filteredStudents = students.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const handleDelete = (studentID) => {
         if (!window.confirm('Are you sure you want to delete this student?')){
@@ -168,24 +171,45 @@ const handleChange =  (e) => {
                     </div>
 
                     <button type="submit">Add Student</button>
+
                 </form>
             </div>
 
                 <div className= 'student-list'>
-                    <h2>Students ({students.length})</h2>
+                    <h2>
+                        {searchTerm === ""
+                            ? `Students (${students.length})`
+                            : `Showing ${filteredStudents.length} of ${students.length} students`
+                        }
+                    </h2>
+
+                    <div className="search-bar">
+                        <label>
+                            <input
+                                type="text"
+                                placeholder="Search"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </label>
+                    </div>
+
                     <ul>
-                        {students.map(student =>(
+                        {filteredStudents.length > 0 && (
+                         filteredStudents.map(student =>(
                             <li key={student.studentID}>
                                 <strong>{student.name}</strong> -  {student.major} ({student.birthYear})
                                 {student.graduate && <span className="badge">Graduate</span>}
-                                <button
-                                    onClick={() => handleDelete(student.studentID)}
-                                    className="delete-btn"
-                                    >
+                                <button onClick={() => handleDelete(student.studentID)} className="delete-btn">
                                     Delete
                                 </button>
                             </li>
-                        ))}
+                        ))
+                        )}
+
+                        {filteredStudents.length === 0 && searchTerm !== "" && (
+                            <li className="no-results">No students found matching "{searchTerm}"</li>
+                    )}
                     </ul>
                 </div>
         </div>
