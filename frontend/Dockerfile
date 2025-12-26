@@ -9,7 +9,7 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci --silent
 
-# Copy source code
+# Copy source code (includes .env.production)
 COPY . .
 
 # Build production app
@@ -21,7 +21,10 @@ FROM nginx:alpine
 # Copy built app from build stage
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Copy nginx config
+# Remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
