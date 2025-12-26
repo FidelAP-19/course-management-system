@@ -1,15 +1,26 @@
-# Use Java 21 base image (lightweight Alpine Linux)
-FROM eclipse-temurin:21-jdk-alpine
+# Stage 1: Build the application
+FROM maven:3.9-eclipse-temurin-21-alpine AS build
 
-# Set working directory in container
 WORKDIR /app
 
-# Copy the JAR file from target/ into container
-COPY target/*.jar app.jar
+# Copy pom.xml and download dependencies (cached layer)
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# Expose port 8080 (documentation only, doesn't actually open port)
+# Copy source code
+COPY src ./src
+
+# Build the JAR
+RUN mvn clean package -DskipTests
+
+# Stage 2: Run the application
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+# Copy the JAR from build stage
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
 
-# Command to run when container starts
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
