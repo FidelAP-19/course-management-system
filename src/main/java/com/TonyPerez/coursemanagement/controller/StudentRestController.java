@@ -20,7 +20,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Validated
 @RequestMapping("/api/students")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {
+        "https://profound-embrace-production.up.railway.app",
+        "http://localhost:3000"  // For local development
+})
 @Tag(name = "Student Management", description = "APIs for managing student records")
 public class StudentRestController {
     private final StudentRepository studentRepository;
