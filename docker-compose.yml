@@ -1,0 +1,45 @@
+
+services:
+  # PostgreSQL Database Service
+  database:
+    image: postgres:16
+    container_name: coursedb-postgres
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: coursedb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Backend Service
+  backend:
+    image: course-backend:1.0
+    container_name: course-backend
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/coursedb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8080:8080"
+
+
+  # React Frontend
+  frontend:
+    image: course-frontend:1.0
+    container_name: course-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres-data:
