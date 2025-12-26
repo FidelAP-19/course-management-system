@@ -1,6 +1,9 @@
 import React, { useState, useEffect} from 'react';
 import './App.css';
 
+// API URL from environment variables
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+
 function App(){
 
 const [ students, setStudents] = useState([]);
@@ -32,7 +35,7 @@ const handleChange =  (e) => {
             birthYear: parseInt(formData.birthYear)
         };
 
-        fetch('http://localhost:8080/api/students', {
+        fetch(`${API_URL}/api/students`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +58,7 @@ const handleChange =  (e) => {
                 });
                 // Refresh student list
                 setLoading(true);
-                fetch('http://localhost:8080/api/students')
+                fetch(`${API_URL}/api/students`)
                     .then(response => {
                         return response.json();
                     })
@@ -79,7 +82,7 @@ const handleChange =  (e) => {
         if (!window.confirm('Are you sure you want to delete this student?')){
             return;
         }
-        fetch('http://localhost:8080/api/students/' + studentID,{
+        fetch(`${API_URL}/api/students/${studentID}`,{
             method: 'DELETE'
         })
         .then( response => {
@@ -97,7 +100,7 @@ const handleChange =  (e) => {
     };
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/students')
+        fetch(`${API_URL}/api/students`)
             .then(response => response.json())
             .then(data => {
                 setLoading(false);
