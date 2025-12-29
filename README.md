@@ -1,609 +1,420 @@
 # 🎓 Course Management System
 
-> A full-stack web application for managing university students, faculty, and courses with a RESTful API backend and interactive React frontend.
+A full-stack web application for managing students in an educational institution, built with Spring Boot, React, and PostgreSQL. Features complete CRUD operations, live search functionality, and production deployment on Railway.
 
-[![Java](https://img.shields.io/badge/Java-21-orange?style=flat&logo=java)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen?style=flat&logo=spring)](https://spring.io/projects/spring-boot)
-[![React](https://img.shields.io/badge/React-18-blue?style=flat&logo=react)](https://reactjs.org/)
-[![License](https://img.shields.io/badge/license-Educational-lightgrey?style=flat)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://profound-embrace-production.up.railway.app)
+[![Backend API](https://img.shields.io/badge/API-live-blue)](https://course-management-system-production-5be2.up.railway.app/api/students)
 
-**Live Demo:** *(Coming soon - deployment in progress)*
+## 🌟 Features
 
----
+- ✅ **Student Management**: Create, read, and delete student records
+- 🔍 **Live Search**: Real-time filtering of student list
+- ✔️ **Form Validation**: Client and server-side validation
+- 🎓 **Graduate Status**: Track graduate vs undergraduate students
+- 🔄 **Responsive UI**: Clean, user-friendly interface
+- 🚀 **Production Ready**: Deployed with Docker on Railway
+- 🔒 **Secure**: CORS configured for cross-origin security
 
-## 📋 Table of Contents
+## 🖥️ Live Demo
 
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Screenshots](#screenshots)
-- [Getting Started](#getting-started)
-- [API Documentation](#api-documentation)
-- [Project Structure](#project-structure)
-- [Development](#development)
-- [Testing](#testing)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+**Frontend:** https://profound-embrace-production.up.railway.app  
+**Backend API:** https://course-management-system-production-5be2.up.railway.app/api/students
 
----
-
-## 🌟 Overview
-
-The **Course Management System** is a full-stack web application designed to manage university course registrations, student records, and faculty assignments. Built with modern Java Spring Boot backend and React frontend, it demonstrates professional software engineering practices including RESTful API design, database persistence with JPA, comprehensive validation, automated testing, and interactive API documentation.
-
-### Key Highlights
-
-- 🎯 **Full CRUD Operations** for Students, Faculty, and Courses
-- 🔒 **Bean Validation** with custom validators for data integrity
-- 🌐 **RESTful API** following industry best practices
-- 📚 **Interactive API Documentation** with Swagger/OpenAPI
-- ⚡ **React Frontend** with real-time updates
-- 🧪 **Unit Tests** with 90%+ coverage
-- 🎨 **Professional UI** with responsive design
-
----
-
-## ✨ Features
-
-### Backend (Spring Boot REST API)
-
-- ✅ **Student Management**
-    - Create, read, update, delete students
-    - Filter by major and birth year
-    - Graduate/undergraduate distinction
-    - Course enrollment tracking
-
-- ✅ **Faculty Management**
-    - Manage faculty members
-    - Track courses taught
-    - Filter by department and tenure status
-    - Assign courses to faculty
-
-- ✅ **Course Catalog**
-    - Comprehensive course management
-    - Graduate/undergraduate courses
-    - Department-based organization
-    - Credit hour tracking
-
-- ✅ **Advanced Features**
-    - Field-level validation (Bean Validation)
-    - Custom class-level validators
-    - Global exception handling
-    - Query parameter filtering
-    - Idempotent POST requests
-    - Many-to-many relationships (JPA)
-
-### Frontend (React)
-
-- ✅ **Interactive UI**
-    - Display all students with live count
-    - Create new students via form
-    - Auto-refresh after data changes
-    - Graduate student badges
-    - Professional styling with CSS3
-
-- ✅ **Planned Features** (Week 4)
-    - Delete students
-    - Search and filter
-    - Edit existing records
-    - Faculty and course management
-
----
+Try adding, searching, and deleting students!
 
 ## 🛠️ Tech Stack
 
 ### Backend
-
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **Java** | 21 | Core programming language |
-| **Spring Boot** | 3.2.0 | Application framework |
-| **Spring Data JPA** | 3.2.0 | Database ORM |
-| **Spring Validation** | 3.2.0 | Bean validation |
-| **H2 Database** | Runtime | In-memory database (dev) |
-| **Maven** | 3.9+ | Build tool & dependency management |
-| **JUnit 5** | 5.10.0 | Unit testing framework |
-| **Springdoc OpenAPI** | 2.3.0 | API documentation |
+- **Java 21** - Programming language
+- **Spring Boot 3.2** - Application framework
+- **Spring Data JPA** - Data persistence
+- **Hibernate** - ORM framework
+- **PostgreSQL** - Production database
+- **Maven** - Dependency management
+- **Bean Validation** - Input validation
 
 ### Frontend
+- **React 18** - UI library
+- **JavaScript (ES6+)** - Programming language
+- **Fetch API** - HTTP requests
+- **CSS3** - Styling
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **React** | 18 | UI library |
-| **JavaScript** | ES6+ | Programming language |
-| **CSS3** | - | Styling |
-| **Fetch API** | - | HTTP requests |
+### DevOps & Infrastructure
+- **Docker** - Containerization
+- **Docker Compose** - Multi-container orchestration
+- **nginx** - Web server and reverse proxy
+- **Railway** - Cloud platform
+- **Git/GitHub** - Version control & CI/CD
 
-### Development Tools
-
-- **Git** - Version control
-- **Postman** - API testing
-- **IntelliJ IDEA** - Java IDE
-- **VS Code** - Frontend development
-
----
-
-## 🏗️ Architecture
-
-### System Architecture
-
+## 📐 Architecture
 ```
-┌─────────────────────────────────────────┐
-│         React Frontend (Port 3000)      │
-│  ┌───────────────────────────────────┐  │
-│  │  Components                        │  │
-│  │  - StudentList                     │  │
-│  │  - StudentForm                     │  │
-│  │  - (Faculty, Course - planned)     │  │
-│  └───────────────────────────────────┘  │
-└─────────────────────────────────────────┘
-                    ↕ HTTP / JSON
-┌─────────────────────────────────────────┐
-│    Spring Boot Backend (Port 8080)      │
-│  ┌───────────────────────────────────┐  │
-│  │  REST Controllers                  │  │
-│  │  - StudentRestController           │  │
-│  │  - FacultyRestController           │  │
-│  │  - CourseRestController            │  │
-│  └───────────────────────────────────┘  │
-│  ┌───────────────────────────────────┐  │
-│  │  Service Layer (Future)            │  │
-│  └───────────────────────────────────┘  │
-│  ┌───────────────────────────────────┐  │
-│  │  JPA Repositories                  │  │
-│  │  - StudentRepository               │  │
-│  │  - FacultyRepository               │  │
-│  │  - CourseRepository                │  │
-│  └───────────────────────────────────┘  │
-│  ┌───────────────────────────────────┐  │
-│  │  H2 Database                       │  │
-│  │  (PostgreSQL in production)        │  │
-│  └───────────────────────────────────┘  │
-└─────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                         Internet                             │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                  ┌────────▼────────┐
+                  │  Railway Cloud  │
+                  └────────┬────────┘
+         ┌────────────────┼────────────────┐
+         │                │                │
+    ┌────▼─────┐    ┌────▼─────┐    ┌────▼─────┐
+    │ Frontend │    │ Backend  │    │ Database │
+    │  (nginx) │───▶│  (Boot)  │───▶│(Postgres)│
+    │  + React │    │  + API   │    │  + Vol   │
+    └──────────┘    └──────────┘    └──────────┘
+         80              8080            5432
 ```
 
-### Three-Layer Pattern
-
-**Controller Layer (API)**
-- Handles HTTP requests/responses
-- Input validation (format)
-- Returns appropriate status codes
-- Swagger annotations for documentation
-
-**Repository Layer (Data Access)**
-- Spring Data JPA interfaces
-- Auto-generated CRUD methods
-- Custom query methods
-- Database abstraction
-
-**Domain Layer (Entities)**
-- JPA entities with annotations
-- Bean validation
-- Business logic encapsulation
-- Relationship mappings
-
----
-
-## 📸 Screenshots
-
-### API Documentation (Swagger UI)
-*Interactive API documentation with Try-it-out functionality*
-
-![Swagger UI](docs/screenshots/swagger-ui.png)
-
-### React Frontend - Student Management
-*Create and view students with real-time updates*
-
-![React Student List](docs/screenshots/react-students.png)
-
-### Validation Errors
-*Professional error handling with detailed messages*
-
-![Validation](docs/screenshots/validation-errors.png)
-
-> **Note:** Screenshots coming soon - application just completed!
-
----
+### Data Flow
+1. User interacts with React frontend (port 3000 → 80 in production)
+2. Frontend makes HTTP requests to REST API
+3. nginx proxies `/api/*` requests to backend (port 8080)
+4. Spring Boot processes requests via service layer
+5. JPA/Hibernate translates to SQL queries
+6. PostgreSQL stores/retrieves data from persistent volume
+7. Response flows back through the stack to user
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+- Java 21 or higher
+- Node.js 18 or higher
+- Docker & Docker Compose
+- Git
 
-- **Java 21** or higher ([Download](https://www.oracle.com/java/technologies/downloads/))
-- **Maven 3.9+** (usually bundled with IDE)
-- **Node.js 18+** and **npm** ([Download](https://nodejs.org/))
-- **Git** ([Download](https://git-scm.com/))
+### Local Development with Docker Compose (Recommended)
 
-### Installation
-
-#### 1. Clone the Repository
-
+1. **Clone the repository**
 ```bash
-git clone https://github.com/FidelAP-19/course-management-system.git
-cd course-management-system
+   git clone https://github.com/YOUR_USERNAME/course-management-system.git
+   cd course-management-system
 ```
 
-#### 2. Backend Setup (Spring Boot)
-
+2. **Start all services**
 ```bash
-# Build the project
-mvn clean install
-
-# Run the backend server
-mvn spring-boot:run
+   docker-compose up
 ```
 
-Backend will start on **http://localhost:8080**
+3. **Access the application**
+  - Frontend: http://localhost:3000
+  - Backend API: http://localhost:8080/api/students
+  - Database: localhost:5432 (postgres/password)
 
-**Verify backend:**
-- API Docs: http://localhost:8080/swagger-ui.html
-- H2 Console: http://localhost:8080/h2-console
-    - JDBC URL: `jdbc:h2:mem:coursedb`
-    - Username: `sa`
-    - Password: *(leave blank)*
-
-#### 3. Frontend Setup (React)
-
+4. **Stop all services**
 ```bash
-# Navigate to frontend directory
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm start
+   docker-compose down
 ```
 
-Frontend will start on **http://localhost:3000**
+### Local Development without Docker
 
-#### 4. Access the Application
+#### Backend Setup
 
-- **Frontend:** http://localhost:3000
-- **API Docs:** http://localhost:8080/swagger-ui.html
-- **Database:** http://localhost:8080/h2-console
+1. **Configure database**
 
----
-
-## 📚 API Documentation
-
-### Base URL
-```
-http://localhost:8080/api
+   Create PostgreSQL database:
+```sql
+   CREATE DATABASE coursedb;
 ```
 
-### Student Endpoints
+2. **Update `application.properties`** (if needed)
+```properties
+   spring.datasource.url=jdbc:postgresql://localhost:5432/coursedb
+   spring.datasource.username=postgres
+   spring.datasource.password=password
+```
 
-| Method | Endpoint | Description | Request Body |
-|--------|----------|-------------|--------------|
-| `GET` | `/students` | Get all students or filter | Query params: `major`, `birthYear` |
-| `GET` | `/students/{id}` | Get student by ID | - |
-| `POST` | `/students` | Create new student | Student JSON |
-| `DELETE` | `/students/{id}` | Delete student | - |
+3. **Run backend**
+```bash
+   mvn spring-boot:run
+```
+Backend will start on http://localhost:8080
 
-### Faculty Endpoints
+#### Frontend Setup
 
-| Method | Endpoint | Description | Request Body |
-|--------|----------|-------------|--------------|
-| `GET` | `/faculty` | Get all faculty or filter | Query params: `deptName`, `isTenured` |
-| `GET` | `/faculty/{id}` | Get faculty by ID | - |
-| `POST` | `/faculty` | Create new faculty | Faculty JSON |
-| `POST` | `/faculty/{id}/courses` | Assign courses to faculty | Course[] JSON |
-| `DELETE` | `/faculty/{id}` | Delete faculty | - |
+1. **Install dependencies**
+```bash
+   cd frontend
+   npm install
+```
 
-### Course Endpoints
+2. **Start development server**
+```bash
+   npm start
+```
+Frontend will start on http://localhost:3000
 
-| Method | Endpoint | Description | Request Body |
-|--------|----------|-------------|--------------|
-| `GET` | `/courses` | Get all courses | - |
-| `GET` | `/courses/{dept}/{num}` | Get course by dept and number | - |
-| `POST` | `/courses` | Create new course | Course JSON |
-| `DELETE` | `/courses/{dept}/{num}` | Delete course | - |
+## 📡 API Endpoints
 
-### Example Request/Response
+### Student Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/students` | Retrieve all students |
+| POST | `/api/students` | Create a new student |
+| DELETE | `/api/students/{id}` | Delete a student by ID |
+
+### Request/Response Examples
 
 **Create Student:**
 ```bash
-POST /api/students
-Content-Type: application/json
-
-{
-  "name": "Alice Johnson",
-  "birthYear": 2005,
-  "major": "Computer Science",
-  "isGraduate": false
-}
+curl -X POST http://localhost:8080/api/students \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "birthYear": 2000,
+    "major": "Computer Science",
+    "isGraduate": true
+  }'
 ```
 
-**Response (201 Created):**
+**Response:**
 ```json
 {
   "studentID": 1,
-  "name": "Alice Johnson",
-  "birthYear": 2005,
+  "name": "John Doe",
+  "birthYear": 2000,
   "major": "Computer Science",
-  "graduate": false,
-  "numCoursesTaken": 0,
-  "allCoursesTakenAsString": ""
+  "graduate": true
 }
 ```
 
-**Validation Error (400 Bad Request):**
-```json
-{
-  "timestamp": "2025-12-19T12:34:56.789",
-  "status": 400,
-  "error": "Validation Failed",
-  "message": "Invalid request data",
-  "errors": {
-    "name": "Student name cannot be empty",
-    "birthYear": "Birth year must be between 1900 and 2015",
-    "major": "Major cannot be empty"
-  },
-  "path": "/api/students"
-}
-```
+## 🐳 Docker
 
-**Full API documentation available at:** http://localhost:8080/swagger-ui.html
+### Multi-Stage Dockerfiles
 
----
+**Backend Dockerfile:**
+- Stage 1: Maven build (creates JAR)
+- Stage 2: JRE runtime (minimal image)
+- Final size: ~250MB
 
-## 📁 Project Structure
+**Frontend Dockerfile:**
+- Stage 1: Node.js build (npm run build)
+- Stage 2: nginx serve (static files only)
+- Final size: ~23MB (40x smaller than single-stage!)
 
-```
-course-management-system/
-├── src/
-│   ├── main/
-│   │   ├── java/com/TonyPerez/coursemanagement/
-│   │   │   ├── config/
-│   │   │   │   ├── CorsConfig.java           # CORS configuration
-│   │   │   │   └── OpenApiConfig.java        # Swagger configuration
-│   │   │   ├── controller/
-│   │   │   │   ├── StudentRestController.java
-│   │   │   │   ├── FacultyRestController.java
-│   │   │   │   └── CourseRestController.java
-│   │   │   ├── domain/
-│   │   │   │   ├── Person.java               # Base class
-│   │   │   │   ├── Employee.java             # Base class for staff
-│   │   │   │   ├── Student.java              # JPA Entity
-│   │   │   │   ├── Faculty.java              # JPA Entity
-│   │   │   │   ├── Course.java               # JPA Entity
-│   │   │   │   └── GeneralStaff.java
-│   │   │   ├── exception/
-│   │   │   │   ├── GlobalExceptionHandler.java  # @ControllerAdvice
-│   │   │   │   └── ErrorResponse.java        # Error DTO
-│   │   │   ├── repository/
-│   │   │   │   ├── StudentRepository.java    # Spring Data JPA
-│   │   │   │   ├── FacultyRepository.java
-│   │   │   │   └── CourseRepository.java
-│   │   │   ├── service/                      # Legacy console services
-│   │   │   ├── validation/
-│   │   │   │   ├── ValidStudent.java         # Custom annotation
-│   │   │   │   ├── StudentValidator.java     # Validator logic
-│   │   │   │   ├── ValidFaculty.java
-│   │   │   │   └── FacultyValidator.java
-│   │   │   └── Application.java              # Main class
-│   │   └── resources/
-│   │       ├── application.properties        # Spring Boot config
-│   │       └── SchoolDB_Initial.txt          # Sample data
-│   └── test/
-│       └── java/com/TonyPerez/coursemanagement/
-│           └── controller/
-│               └── StudentRestControllerTest.java  # 12 unit tests
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── App.js                            # Main React component
-│   │   ├── App.css                           # Styling
-│   │   └── index.js                          # Entry point
-│   ├── package.json
-│   └── README.md
-├── archived-console-app/                     # Original console version
-├── pom.xml                                   # Maven configuration
-└── README.md
-```
-
----
-
-## 💻 Development
-
-### Running Tests
-
+### Building Images Manually
 ```bash
-# Run all tests
-mvn test
+# Backend
+docker build -t course-backend:1.0 .
 
-# Run tests with coverage
-mvn test jacoco:report
-
-# Run specific test class
-mvn test -Dtest=StudentRestControllerTest
+# Frontend
+cd frontend
+docker build -t course-frontend:1.0 .
 ```
 
-### Code Quality
-
-```bash
-# Compile and check for errors
-mvn clean compile
-
-# Package application
-mvn clean package
-
-# Skip tests (for quick builds)
-mvn clean install -DskipTests
+### Docker Compose Services
+```yaml
+services:
+  database:  # PostgreSQL 16 with health checks
+  backend:   # Spring Boot with environment variables
+  frontend:  # React with nginx proxy
 ```
 
-### Hot Reload (Development Mode)
+## 🔐 Security Features
 
-**Backend:**
-- Spring Boot DevTools enabled
-- Automatic restart on code changes
-
-**Frontend:**
-- React development server with hot reload
-- Changes reflect immediately in browser
-
----
+- **CORS Configuration**: Restricts API access to specific domains
+- **Input Validation**: Bean Validation on backend (@NotBlank, @Min, @Max)
+- **SQL Injection Prevention**: JPA/Hibernate parameterized queries
+- **Environment Variables**: Sensitive data not hardcoded
 
 ## 🧪 Testing
 
-### Test Coverage
+### Manual Testing Checklist
 
-- **Unit Tests:** 12 tests covering REST controllers
-- **Coverage:** ~90% for controller layer
-- **Framework:** JUnit 5 + Spring Boot Test + MockMvc
+- [ ] Create student with valid data
+- [ ] Create student with invalid data (validation errors)
+- [ ] Search/filter students by name
+- [ ] Delete student
+- [ ] Refresh page (data persists)
+- [ ] Test with empty database
 
-### Test Categories
+### API Testing with curl
+```bash
+# Get all students
+curl http://localhost:8080/api/students
 
-**StudentRestController (12 tests):**
-- GET endpoints (filtering, validation, type conversion)
-- POST endpoint (creation, validation)
-- Edge cases (empty results, invalid data)
+# Create student
+curl -X POST http://localhost:8080/api/students \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","birthYear":2000,"major":"Testing","isGraduate":false}'
 
-**Example Test:**
-```java
-@Test
-public void testGetStudents_FilterByMajor_ReturnsFilteredStudents() {
-    // Arrange
-    Student cs1 = new Student("Alice", 2000, "Computer Science", false);
-    when(studentRepository.findByMajor("Computer Science"))
-        .thenReturn(List.of(cs1));
-
-    // Act & Assert
-    mockMvc.perform(get("/api/students").param("major", "Computer Science"))
-           .andExpect(status().isOk())
-           .andExpect(jsonPath("$.length()").value(1))
-           .andExpect(jsonPath("$[0].major").value("Computer Science"));
-}
+# Delete student (replace {id})
+curl -X DELETE http://localhost:8080/api/students/{id}
 ```
 
-**Future Tests:**
-- FacultyRestController tests
-- CourseRestController tests
-- Integration tests with @SpringBootTest
+## 📁 Project Structure
+```
+course-management-system/
+├── src/
+│   └── main/
+│       ├── java/com/example/coursemanagement/
+│       │   ├── controller/
+│       │   │   └── StudentController.java      # REST endpoints
+│       │   ├── service/
+│       │   │   └── StudentService.java         # Business logic
+│       │   ├── repository/
+│       │   │   └── StudentRepository.java      # Data access
+│       │   ├── model/
+│       │   │   ├── Person.java                 # Base entity
+│       │   │   └── Student.java                # Student entity
+│       │   ├── config/
+│       │   │   └── CorsConfig.java             # CORS configuration
+│       │   └── CourseManagementApplication.java
+│       └── resources/
+│           └── application.properties          # Configuration
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── App.js                              # Main React component
+│   │   ├── App.css                             # Styles
+│   │   └── index.js                            # Entry point
+│   ├── .env.development                        # Local API URL
+│   ├── .env.production                         # Production API URL
+│   ├── Dockerfile                              # Frontend container
+│   ├── nginx.conf                              # nginx configuration
+│   └── package.json
+├── Dockerfile                                  # Backend container
+├── docker-compose.yml                          # Multi-service orchestration
+├── pom.xml                                     # Maven configuration
+└── README.md
+```
 
----
+## 🌱 Environment Variables
 
-## 🗺️ Roadmap
+### Backend (Spring Boot)
+```properties
+SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/coursedb
+SPRING_DATASOURCE_USERNAME=postgres
+SPRING_DATASOURCE_PASSWORD=password
+```
 
-### ✅ Completed (Weeks 1-4)
+### Frontend (React)
+```bash
+# .env.development
+REACT_APP_API_URL=http://localhost:8080
 
-- [x] Spring Boot REST API with full CRUD
-- [x] JPA entities with many-to-many relationships
-- [x] Bean Validation (field + custom validators)
-- [x] Global exception handling
-- [x] Query parameter filtering
-- [x] Swagger/OpenAPI documentation
-- [x] Unit tests (controller layer)
-- [x] React frontend with create functionality
-- [x] CORS configuration
+# .env.production
+REACT_APP_API_URL=https://course-management-system-production-5be2.up.railway.app
+```
 
-### 🔄 In Progress (Week 4)
+## 🚢 Deployment
 
-- [ ] React delete functionality
-- [ ] React search/filter
-- [ ] Frontend for Faculty and Courses
-- [ ] Enhanced error handling in React
+### Railway Deployment (Current)
 
-### 📅 Coming Soon (Weeks 5-7)
+**Automatic deployment on push to main branch**
 
-#### Week 5: Production Database
-- [ ] Replace H2 with PostgreSQL
-- [ ] Database migration scripts
-- [ ] Connection pooling
-- [ ] Production configuration
+1. **Database**: PostgreSQL service with persistent volume
+2. **Backend**: Dockerfile build with environment variables
+3. **Frontend**: Multi-stage build with nginx
 
-#### Week 6: Containerization
-- [ ] Dockerfile for Spring Boot app
-- [ ] Dockerfile for React app
-- [ ] Docker Compose setup
-- [ ] Multi-container orchestration
+### Manual Deployment Steps
 
-#### Week 7: Deployment & Polish
-- [ ] Deploy to cloud (Heroku/Railway/Render)
-- [ ] Environment-specific configs
-- [ ] CI/CD pipeline
-- [ ] Production monitoring
-- [ ] README with live demo link
+1. **Push to GitHub**
+```bash
+   git push origin main
+```
 
-### 🔮 Future Enhancements
+2. **Railway Auto-Deploys**
+  - Backend builds from root Dockerfile
+  - Frontend builds from `frontend/Dockerfile`
+  - Database provisions automatically
 
-- [ ] Spring Security with JWT authentication
-- [ ] Role-based access control (Admin/Faculty/Student)
-- [ ] Email notifications
-- [ ] File upload for student photos
-- [ ] Course schedule management
-- [ ] Grade tracking system
-- [ ] Reports and analytics dashboard
+3. **Verify Deployment**
+  - Check Railway dashboard for "Deployment successful"
+  - Visit frontend URL
+  - Test API endpoints
 
----
+## 🔧 Configuration
 
-## 🤝 Contributing
+### CORS Configuration
 
-This is an educational project for portfolio purposes. However, feedback and suggestions are welcome!
+Current setup allows requests from:
+- `https://profound-embrace-production.up.railway.app` (production)
+- `http://localhost:3000` (development)
 
-### How to Contribute
+To add more origins, update `StudentController.java`:
+```java
+@CrossOrigin(origins = {
+    "https://your-frontend.com",
+    "http://localhost:3000"
+})
+```
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/YourFeature`)
-3. Commit your changes (`git commit -m 'Add YourFeature'`)
-4. Push to the branch (`git push origin feature/YourFeature`)
-5. Open a Pull Request
+### Database Configuration
 
-### Code Style
+For different database providers, update `application.properties`:
+```properties
+spring.datasource.url=jdbc:postgresql://HOST:PORT/DATABASE
+spring.datasource.username=USERNAME
+spring.datasource.password=PASSWORD
+```
 
-- Follow Java naming conventions
-- Use Spring Boot best practices
-- Write tests for new features
-- Document API changes in Swagger
+## 🐛 Troubleshooting
 
----
+### Common Issues
 
-## 📄 License
+**CORS Error:**
+- Check `@CrossOrigin` annotation includes your domain
+- Verify frontend URL matches exactly (https vs http)
 
-This project is for **educational purposes** as part of a software engineering portfolio.
+**Database Connection Failed:**
+- Ensure PostgreSQL is running
+- Check connection string in environment variables
+- Verify database credentials
 
-**Not licensed for commercial use.**
+**Docker Build Fails:**
+- Clear Docker cache: `docker system prune -a`
+- Check `target/` folder has JAR file (run `mvn package`)
+- Verify `nginx.conf` exists in `frontend/` directory
 
----
+**Frontend Shows Stale Data:**
+- Hard refresh browser (Cmd/Ctrl + Shift + R)
+- Check browser console for API errors
+- Verify backend is running and accessible
 
-## 📧 Contact
+## 📚 Learning Outcomes
 
-**Fidel "Tony" Perez**
+This project demonstrates:
+- ✅ RESTful API design and implementation
+- ✅ React component architecture with hooks
+- ✅ Docker containerization and optimization
+- ✅ Database design and JPA relationships
+- ✅ Cloud deployment and CI/CD
+- ✅ CORS security configuration
+- ✅ Environment-based configuration
+- ✅ Full-stack integration
 
+## 🔮 Future Enhancements
+
+- [ ] Add Faculty management (CRUD for faculty members)
+- [ ] Add Course management (CRUD for courses)
+- [ ] Implement student-course enrollment (many-to-many relationship)
+- [ ] Add user authentication (Spring Security + JWT)
+- [ ] Implement pagination for large datasets
+- [ ] Add sorting functionality
+- [ ] Create comprehensive test suite (JUnit, Jest)
+- [ ] Add edit/update functionality for students
+- [ ] Implement role-based access control
+- [ ] Add API documentation (Swagger/OpenAPI)
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 👤 Author
+
+**Your Name**
 - GitHub: [@FidelAP-19](https://github.com/FidelAP-19)
 - LinkedIn: [Fidel Perez](https://www.linkedin.com/in/fidel-perez-51288929b/)
 
----
-
 ## 🙏 Acknowledgments
 
-- **Spring Boot Documentation** - Excellent guides and examples
-- **React Documentation** - Comprehensive learning resources
-- **Baeldung** - Spring Boot tutorials
-- **Stack Overflow Community** - Problem-solving assistance
-- **Anthropic Claude** - Mentorship and guidance throughout development
+- Built as part of a software engineering mentorship program
+- Transformed from a console-based school project to production-ready application
+- Special thanks to the Spring Boot and React communities for excellent documentation
 
 ---
 
-## 📈 Project Stats
+⭐ **Star this repo if you found it helpful!**
 
-- **Lines of Code:** ~2,000+
-- **Development Time:** ~30 hours (10 sessions)
-- **Technologies:** 10+ (Java, Spring Boot, React, JPA, Maven, etc.)
-- **API Endpoints:** 13 REST endpoints
-- **Test Coverage:** 90%+ (controller layer)
-
----
-
-<div align="center">
-
-**⭐ Star this repo if you found it helpful!**
-
-
-[⬆ Back to Top](#-course-management-system)
-
-</div>
+📧 **Questions?** Open an issue or reach out!
